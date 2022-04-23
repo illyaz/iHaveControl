@@ -5,19 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iHaveControl"
         mc:Ignorable="d"
-        SizeToContent="Height"
-        ResizeMode="CanMinimize"
-        Title="iHaveControl" Height="Auto" Width="300">
-    <Grid Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Label Content="Device:" />
-        <ComboBox x:Name="cbDevice" Width="Auto" Grid.Column="1" SelectionChanged="cbDevice_SelectionChanged"/>
-    </Grid>
+        ResizeMode="CanMinimize" 
+        ShowInTaskbar="False"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Title="iHaveControl" Width="200" Height="60">
+    <Grid></Grid>
 </Window>
