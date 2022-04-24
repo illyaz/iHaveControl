@@ -16,13 +16,13 @@
             var token = _tokens.AddOrUpdate(uniqueKey,
                 (key) => //key not found - create new
             {
-                    return new CancellationTokenSource();
-                },
+                return new CancellationTokenSource();
+            },
                 (key, existingToken) => //key found - cancel task and recreate
             {
-                    existingToken.Cancel(); //cancel previous
+                existingToken.Cancel(); //cancel previous
                 return new CancellationTokenSource();
-                }
+            }
             );
 
             Task.Delay(millisecondsDelay, token.Token).ContinueWith(task =>
