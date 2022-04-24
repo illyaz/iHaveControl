@@ -63,7 +63,7 @@
             if (File.Exists(_configPath))
             {
                 _config = JsonSerializer.Deserialize<Config>(File.ReadAllText(_configPath))!;
-                try { _device = _enumerator.GetDevice(_config.DeviceId); } catch { /* Just shutup */ }
+                try { SetDevice(_enumerator.GetDevice(_config.DeviceId)); } catch { /* Just shutup */ }
             }
         }
 
@@ -126,6 +126,7 @@
                 });
             }, 300);
         }
+
         private void UpdateDeviceList()
         {
             var deviceList = _enumerator
@@ -199,11 +200,9 @@
                 {
                     case Key.VolumeUp:
                         _device.AudioEndpointVolume.VolumeStepUp();
-                        UpdateVolume();
                         return 1;
                     case Key.VolumeDown:
                         _device.AudioEndpointVolume.VolumeStepDown();
-                        UpdateVolume();
                         return 1;
                 }
             }
@@ -218,8 +217,8 @@
 
             try
             {
-                _device = _enumerator.GetDevice((string)item.Tag);
-                _config.DeviceId = _device.ID;
+                SetDevice(_enumerator.GetDevice((string)item.Tag));
+                _config.DeviceId = _device!.ID;
                 UpdateSelectItem();
                 SaveConfig();
             }
@@ -228,11 +227,28 @@
                 MessageBox.Show($"Cannot get device: {item.Text}\nID: {item.Tag}",
                     Title, MessageBoxButton.OK, MessageBoxImage.Warning);
 
-                _device = null;
+                SetDevice(null);
             }
 
             UpdateVolume();
         }
+
+        private void SetDevice(MMDevice? device)
+        {
+            if (_device != null)
+            {
+                _device.AudioEndpointVolume.OnVolumeNotification -= OnVolumeNotification;
+                _device.Dispose();
+            }
+
+            _device = device;
+
+            if (_device != null)
+                _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeNotification;
+        }
+
+        private void OnVolumeNotification(AudioVolumeNotificationData _)
+            => Dispatcher.Invoke(UpdateVolume);
 
         private Icon MakeIcon(string text, bool deviceExists = false)
         {
