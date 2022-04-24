@@ -84,7 +84,8 @@
             System.Windows.Application.Current.Shutdown();
         }
 
-        public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId) { }
+        public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+            => SomethingChanged();
 
         public void OnDeviceAdded(string pwstrDeviceId)
             => SomethingChanged();
@@ -115,12 +116,15 @@
 
         private void SomethingChanged()
         {
-            Dispatcher.Invoke(() =>
+            Debouncer.Debounce("slow down please", () =>
             {
-                UpdateDeviceList();
-                UpdateSelectItem();
-                UpdateVolume();
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateDeviceList();
+                    UpdateSelectItem();
+                    UpdateVolume();
+                });
+            }, 300);
         }
         private void UpdateDeviceList()
         {
