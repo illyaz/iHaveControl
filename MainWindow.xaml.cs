@@ -48,6 +48,9 @@
             };
 
             var contextMenu = new ContextMenuStrip();
+            contextMenu.Items.Add(new ToolStripMenuItem($"Commit: {ThisAssembly.Git.Branch}-{ThisAssembly.Git.Commit}") { Enabled = false });
+            contextMenu.Items.Add(new ToolStripMenuItem("Check update", null,
+                (_, _) => new Updater().ShowDialog()));
             contextMenu.Items.Add(_inputDeviceMenu);
             contextMenu.Items.Add(_outputDeviceMenu);
             contextMenu.Items.Add(new ToolStripMenuItem("Exit", null, Exit));
@@ -101,6 +104,9 @@
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            if (((App)System.Windows.Application.Current).Updated)
+                MessageBox.Show("Update complated", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+
             using Process process = Process.GetCurrentProcess();
             using ProcessModule module = process.MainModule!;
 
