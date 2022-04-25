@@ -156,8 +156,10 @@
         {
             var vol = _device is null
                 ? "0"
-                : Math.Clamp(Math.Round(_device!.AudioEndpointVolume.MasterVolumeLevelScalar * 100), 0, 100)
-                    .ToString();
+                : _device.AudioEndpointVolume.Mute
+                    ? "X"
+                    : Math.Clamp(Math.Round(_device!.AudioEndpointVolume.MasterVolumeLevelScalar * 100), 0, 100)
+                        .ToString();
 
             var ico = MakeIcon(vol, IsDeviceAvailable);
             _trayIcon.Icon?.Dispose();
@@ -203,6 +205,9 @@
                         return 1;
                     case Key.VolumeDown:
                         _device.AudioEndpointVolume.VolumeStepDown();
+                        return 1;
+                    case Key.VolumeMute:
+                        _device.AudioEndpointVolume.Mute = !_device.AudioEndpointVolume.Mute;
                         return 1;
                 }
             }
