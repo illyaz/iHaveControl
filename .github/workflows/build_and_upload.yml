@@ -23,13 +23,16 @@ jobs:
       run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained false --no-restore
     - name: Copy publish
       run: cp bin\x64\Release\net6.0-windows\win-x64\publish\* .
+    - name: version
+      run: echo "::set-output name=version::$(git rev-parse --short HEAD)"
+      id: version
     - name: release
       uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         automatic_release_tag: latest
         prerelease: false
-        title: iHaveControl
+        title: iHaveControl - ${{ steps.version.outputs.version }}
         files: |
           iHaveControl.exe
           iHaveControl.pdb
