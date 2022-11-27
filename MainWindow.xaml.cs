@@ -51,6 +51,8 @@
             contextMenu.Items.Add(new ToolStripMenuItem($"Commit: {ThisAssembly.Git.Branch}-{ThisAssembly.Git.Commit}") { Enabled = false });
             contextMenu.Items.Add(new ToolStripMenuItem("Check update", null,
                 (_, _) => new Updater().ShowDialog()));
+            contextMenu.Items.Add(new ToolStripMenuItem("Sound settings", null,
+                (_, _) => Process.Start("control", "mmsys.cpl")));
             contextMenu.Items.Add(_inputDeviceMenu);
             contextMenu.Items.Add(_outputDeviceMenu);
             contextMenu.Items.Add(new ToolStripMenuItem("Exit", null, Exit));
